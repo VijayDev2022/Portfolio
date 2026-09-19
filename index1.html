@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vijayasekar K — Full-Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    --ink: #0a0e1a;
+    --panel: #121828;
+    --panel-2: #161d31;
+    --line: #232b42;
+    --text: #e8ecf4;
+    --muted: #8791a8;
+    --muted-dim: #5b6479;
+    --accent: #4fd1c5;
+    --accent-dim: #2c7c73;
+    --radius-lg: 18px;
+    --radius-sm: 8px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+    scroll-behavior: smooth;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  a { color: inherit; }
+
+  .tag {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ---------- layout shell ---------- */
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---------- background texture ---------- */
+  .grid-field {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(79,209,197,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(79,209,197,0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  /* ---------- header / hero ---------- */
+  header {
+    position: relative;
+    z-index: 1;
+    padding: 88px 0 64px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 28px;
+  }
+  .status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79,209,197,0.18);
+  }
+
+  .hero-name {
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+    opacity: 0;
+    animation: rise 0.7s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  .hero-role {
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    color: var(--accent);
+    margin-top: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    opacity: 0;
+    animation: rise 0.7s cubic-bezier(.2,.7,.3,1) 0.12s forwards;
+  }
+  .hero-desc {
+    max-width: 58ch;
+    color: var(--muted);
+    margin-top: 22px;
+    font-size: 1.02rem;
+    opacity: 0;
+    animation: rise 0.7s cubic-bezier(.2,.7,.3,1) 0.22s forwards;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  nav.contact-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 230px;
+    opacity: 0;
+    animation: rise 0.7s cubic-bezier(.2,.7,.3,1) 0.32s forwards;
+  }
+  .contact-block a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    background: var(--panel);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .contact-block a:hover {
+    border-color: var(--accent-dim);
+    transform: translateX(-2px);
+  }
+  .contact-block a span.arrow {
+    color: var(--muted);
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 44px;
+    flex-wrap: wrap;
+  }
+  .stat b {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 600;
+  }
+  .stat span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* ---------- section shared ---------- */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 64px 0;
+  }
+  section + section { border-top: 1px solid var(--line); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    gap: 20px;
+  }
+  .section-head h2 { font-size: 1.7rem; }
+  .section-head p { color: var(--muted); font-size: 0.92rem; margin: 6px 0 0; }
+
+  /* ---------- stack / skills ---------- */
+  .stack-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 28px;
+  }
+  .stack-groups h3 {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    text-transform: none;
+    margin-bottom: 12px;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 0.76rem;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 12px;
+  }
+
+  /* ---------- projects ---------- */
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .card:hover {
+    border-color: var(--accent-dim);
+    background: var(--panel-2);
+  }
+  .card h3 {
+    font-size: 1.08rem;
+    margin-bottom: 8px;
+  }
+  .card p.desc {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin: 0 0 16px;
+    flex-grow: 1;
+  }
+  .card .chip-row { margin-bottom: 18px; }
+  .card .visit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    margin-top: auto;
+  }
+  .card .visit:hover { text-decoration: underline; }
+
+  /* ---------- contact / footer ---------- */
+  .contact-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .contact-panel h2 { font-size: 1.7rem; max-width: 22ch; }
+  .contact-links { display: flex; gap: 12px; flex-wrap: wrap; }
+  .contact-links a {
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    font-size: 0.92rem;
+    background: var(--ink);
+    transition: border-color 0.2s ease;
+  }
+  .contact-links a:hover { border-color: var(--accent-dim); }
+  .contact-links a.primary {
+    background: var(--accent);
+    color: #06211d;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--muted-dim, var(--muted));
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 64px 0 44px; }
+    .contact-panel { padding: 30px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-field" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header>
+    <div class="hero-top">
+      <div>
+        <p class="status">Open to new projects</p>
+        <h1 class="hero-name">Vijayasekar&nbsp;K</h1>
+        <p class="hero-role">Full-Stack Developer</p>
+        <p class="hero-desc">I build e-commerce platforms, admin systems, and business websites end to end — from database schema to payment integration to the interface people actually use.</p>
+      </div>
+      <nav class="contact-block" aria-label="Contact">
+        <a href="mailto:kvijayasekar11@gmail.com">Email <span class="arrow">↗</span></a>
+        <a href="https://www.linkedin.com/in/vijayasekar-k" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+      </nav>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><b>13</b><span>projects shipped</span></div>
+      <div class="stat"><b>10+</b><span>technologies across the stack</span></div>
+      <div class="stat"><b>3</b><span>payment integrations live</span></div>
+    </div>
+  </header>
+
+  <section id="stack">
+    <div class="section-head">
+      <div>
+        <h2>Stack</h2>
+        <p>Grouped by where each piece sits in the systems I build.</p>
+      </div>
+    </div>
+    <div class="stack-groups">
+      <div>
+        <h3>Frontend</h3>
+        <div class="chip-row">
+          <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span>
+          <span class="chip">React</span><span class="chip">AngularJS</span>
+        </div>
+      </div>
+      <div>
+        <h3>Backend &amp; CMS</h3>
+        <div class="chip-row">
+          <span class="chip">PHP</span><span class="chip">CodeIgniter</span><span class="chip">Laravel</span>
+          <span class="chip">WordPress</span>
+        </div>
+      </div>
+      <div>
+        <h3>Data &amp; infrastructure</h3>
+        <div class="chip-row">
+          <span class="chip">MySQL</span><span class="chip">Firebase</span>
+        </div>
+      </div>
+      <div>
+        <h3>Payments</h3>
+        <div class="chip-row">
+          <span class="chip">Razorpay</span><span class="chip">Stripe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head">
+      <div>
+        <h2>Selected work</h2>
+        <p>Live client sites, spanning e-commerce, corporate, and association platforms.</p>
+      </div>
+    </div>
+    <div class="projects">
+
+      <article class="card">
+        <h3>SME Dealz</h3>
+        <p class="desc">A marketplace for buying and selling products and businesses, with an integrated Razorpay checkout.</p>
+        <div class="chip-row">
+          <span class="chip">AngularJS</span><span class="chip">CodeIgniter</span><span class="chip">MySQL</span><span class="chip">Firebase</span><span class="chip">Razorpay</span>
+        </div>
+        <a class="visit" href="https://smedealz.com/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Magick Woods</h3>
+        <p class="desc">Public website paired with an admin panel for managing products and site content.</p>
+        <div class="chip-row">
+          <span class="chip">React</span><span class="chip">CodeIgniter</span><span class="chip">MySQL</span><span class="chip">WordPress</span>
+        </div>
+        <a class="visit" href="https://www.magickwoods.com/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Agna Business Applications</h3>
+        <p class="desc">A static corporate site built for a straightforward, fast-loading company presence.</p>
+        <div class="chip-row">
+          <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">PHP</span><span class="chip">MySQL</span>
+        </div>
+        <a class="visit" href="https://agnabusinessapplications.com/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Namboodiris Care</h3>
+        <p class="desc">Online medical shopping platform with full cart functionality and Stripe checkout.</p>
+        <div class="chip-row">
+          <span class="chip">WordPress</span><span class="chip">MySQL</span><span class="chip">Stripe</span>
+        </div>
+        <a class="visit" href="https://namboodiriscare.in/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Kho Kho Federation</h3>
+        <p class="desc">Website supporting activity and content management for a national sports federation.</p>
+        <div class="chip-row">
+          <span class="chip">WordPress</span><span class="chip">Laravel</span><span class="chip">MySQL</span>
+        </div>
+        <a class="visit" href="https://khokhofederation.in/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Indo Shellcast</h3>
+        <p class="desc">Corporate website presenting an industrial manufacturing business.</p>
+        <div class="chip-row">
+          <span class="chip">WordPress</span><span class="chip">MySQL</span>
+        </div>
+        <a class="visit" href="http://www.indoshellcast.com/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Crown Hair Transplant</h3>
+        <p class="desc">Corporate website for a healthcare provider's clinical services.</p>
+        <div class="chip-row">
+          <span class="chip">WordPress</span><span class="chip">MySQL</span>
+        </div>
+        <a class="visit" href="https://crownhairtransplant.com/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Premier Grass</h3>
+        <p class="desc">Business website built to establish brand presence for an Australian supplier.</p>
+        <div class="chip-row">
+          <span class="chip">WordPress</span><span class="chip">MySQL</span>
+        </div>
+        <a class="visit" href="http://www.premiergrass.com.au/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Asian Tennis Federation</h3>
+        <p class="desc">Website for managing a sports association's public presence and operations.</p>
+        <div class="chip-row">
+          <span class="chip">WordPress</span><span class="chip">MySQL</span>
+        </div>
+        <a class="visit" href="https://www.asiantennis.com/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Falcon Supplier Portal</h3>
+        <p class="desc">Online ordering platform for suppliers, with cart and Stripe payment handling.</p>
+        <div class="chip-row">
+          <span class="chip">PHP</span><span class="chip">MySQL</span><span class="chip">Stripe</span>
+        </div>
+        <a class="visit" href="https://prod-supplier.mydd.app/falcon/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>Pure Colon London</h3>
+        <p class="desc">Customer-facing e-commerce site with a full checkout and payment flow.</p>
+        <div class="chip-row">
+          <span class="chip">PHP</span><span class="chip">MySQL</span><span class="chip">Stripe</span>
+        </div>
+        <a class="visit" href="https://www.purecolondon.co.uk/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+      <article class="card">
+        <h3>DS Distribution</h3>
+        <p class="desc">Online ordering platform for a retail and catering supply business.</p>
+        <div class="chip-row">
+          <span class="chip">PHP</span><span class="chip">MySQL</span><span class="chip">Stripe</span>
+        </div>
+        <a class="visit" href="https://dsdistribution.uk/" target="_blank" rel="noopener">Visit site →</a>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact-panel">
+      <h2>Have a project in mind? Let's build it.</h2>
+      <div class="contact-links">
+        <a href="mailto:kvijayasekar11@gmail.com" class="primary">Email me</a>
+        <a href="https://www.linkedin.com/in/vijayasekar-k" target="_blank" rel="noopener">Connect on LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>© 2026 Vijayasekar K</footer>
+
+</body>
+</html>
